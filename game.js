@@ -92,7 +92,7 @@ function updateScore(points) {
 
 function spawnPumpkin() {
   const pumpkin = document.createElement('img');
-  pumpkin.src = 'game/images/pumpkin.png';
+  pumpkin.src = 'images/pumpkin.png';
   pumpkin.classList.add('pumpkin');
   pumpkin.style.left = Math.random() * 80 + '%';
   pumpkin.style.top = Math.random() * 80 + '%';
@@ -110,7 +110,7 @@ function spawnPumpkin() {
 
 function spawnGoldenPumpkin() {
   const golden = document.createElement('img');
-  golden.src = 'game/images/golden-pumpkin.png';
+  golden.src = 'images/golden-pumpkin.png';
   golden.classList.add('pumpkin', 'golden');
   golden.style.left = Math.random() * 80 + '%';
   golden.style.top = Math.random() * 80 + '%';
@@ -131,7 +131,7 @@ function spawnGoldenPumpkin() {
 
 function spawnSpider() {
   const spider = document.createElement('img');
-  spider.src = 'game/images/spider.png';
+  spider.src = 'images/spider.png';
   spider.classList.add('spider');
   const baseLeft = Math.random() * 70 + 10;
   const baseTop = Math.random() * 70 + 10;
@@ -155,7 +155,7 @@ function spawnSpider() {
 
 function spawnGhost() {
   const ghost = document.createElement('img');
-  ghost.src = 'game/images/ghost.png';
+  ghost.src = 'images/ghost.png';
   ghost.classList.add('ghost');
   ghost.style.zIndex = '9999';
 
