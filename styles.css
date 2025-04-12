@@ -1,279 +1,210 @@
+/* =================== GLOBAL =================== */
 body {
-    background-image: url('images/background.jpeg'); 
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Creepster', cursive;
-    background-color: #1b1b1b;
-    color: #fff;
-  }
-  
-  #game-container {
-    margin-top: 50px;
-  }
-  
-  h1 {
-    font-size: 4em;
-    color: #ff4500; /* Halloween orange */
-    margin-top: 85px;
-    text-align: center;             /* 💥 horizontal centering */
-    width: 100%;                    /* make sure it fills its parent */
-    display: block;
-  }
-  
+  background-image: url('game/images/background.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+  font-family: 'Creepster', cursive;
+  background-color: #1b1b1b;
+  color: #fff;
+  overflow: hidden;
+}
 
-  
-  .bat {
-    position: absolute;
-    top: 10%;
-    left: -100px;
-    width: 80px;
-    height: auto;
-    animation: flyBat 10s linear infinite;
-    z-index: 2;
-  }
-  
-  .bat-sprite {
-    position: absolute;
-    top: 15%;
-    left: -120px;
-    width: 100px;
-    height: 100px;
-    background-image: url('images/bat-sprite.png');
-    background-size: 400% 100%; /* 4 frames horizontally */
-    animation: flap 0.6s steps(4) infinite, flyAcross 12s linear infinite;
-    z-index: 2;
-  }
-  
-  @keyframes flap {
-    from { background-position: 0 0; }
-    to { background-position: 400% 0; }
-  }
-  
-  @keyframes flyAcross {
-    0% { left: -120px; }
-    100% { left: 110%; }
-  }
-  .pumpkin {
-    position: absolute;
-    width: 60px;
-    height: auto;
-    cursor: pointer;
-    z-index: 5;
-    transition: transform 0.2s;
-    padding: 20px; /* 🔥 увеличивает область касания */
-  box-sizing: content-box; /* чтобы не ломать визуальный размер */
-  }
-  
-  .pumpkin.explode {
-    transform: scale(1.5) rotate(360deg);
-    opacity: 0;
-    transition: all 0.4s ease-out;
-  }
-  #mute-btn {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    background: rgba(30, 30, 30, 0.6);
-    color: #fff;
-    border: none;
-    font-size: 24px;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 8px;
-    z-index: 1000;
-    transition: background 0.3s;
-  }
-  
-  #mute-btn:hover {
-    background: rgba(255, 69, 0, 0.8); /* Spooky orange on hover */
-  }
-  .spider {
-    position: absolute;
-    width: 60px;
-    height: auto;
-    cursor: pointer;
-    z-index: 5;
-    transition: transform 0.2s;
-    padding: 20px; /* 🔥 увеличивает область касания */
-  box-sizing: content-box; /* чтобы не ломать визуальный размер */
-  }
+h1 {
+  font-size: 4em;
+  color: #ff4500;
+  margin-top: 85px;
+  text-align: center;
+  width: 100%;
+  display: block;
+}
 
+/* =================== BUTTONS =================== */
+#mute-btn {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(30, 30, 30, 0.6);
+  color: #fff;
+  border: none;
+  font-size: 24px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  z-index: 1000;
+  transition: background 0.3s;
+}
 
-  #game-over {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80vw;
-    max-width: 500px;
-    height: 250px;
-    font-size: 2em;
-    color: #fff; /* ✅ fixed */
-    font-family: 'Creepster', cursive;
-    z-index: 9999;
-    background-color: rgba(0, 0, 0, 0.9);
-    padding: 40px 20px;
-    border-radius: 30px;
-    text-align: center;
-    box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
-  }
-  
+#mute-btn:hover {
+  background: rgba(255, 69, 0, 0.8);
+}
 
-  #info-bar {
-    position: fixed;
-    top: 230px;
-    left: 0;
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
-    font-size: 1.4em;
-    color: #fff;
-    font-family: 'Creepster', cursive;
-    z-index: 1001;
-  }
-  #score, #timer {
-    margin: 0;
-    padding: 0;
-  }
-  #start-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(10, 10, 10, 0.9);
-    color: white;
-    font-family: 'Creepster', cursive;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    text-align: center;
-  }
-  
-  #start-screen h2 {
-    font-size: 3em;
-    margin-bottom: 30px;
-  }
-  #start-btn {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.5em;
-    text-transform: uppercase;
-    padding: 15px 30px;
-    background-color: #ff4500;
-    border: none;
-    color: white;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: background 0.3s;
-    letter-spacing: 1px;
-    animation: pulse 2s infinite;
-  }
-  
-  #start-btn:hover {
-    background-color: #cc3300;
-  }
-  
-  #game-over button {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1em; /* 👈 smaller now! */
-    text-transform: uppercase;
-    padding: 10px 20px;
-    background-color: #ff4500;
-    border: none;
-    color: white;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
-    letter-spacing: 1px;
-    animation: pulse 2s infinite;
-  }
-  
-  #game-over button:hover {
-    background-color: #cc3300;
-  }
-  @keyframes pulse {
-    0% {
-      transform: scale(1);
-      box-shadow: 0 0 0 rgba(255, 69, 0, 0.7);
-    }
-    50% {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 69, 0, 0.8);
-    }
-    100% {
-      transform: scale(1);
-      box-shadow: 0 0 0 rgba(255, 69, 0, 0.7);
-    }
-  }
-  .golden {
-    filter: drop-shadow(0 0 12px gold);
-    transform: scale(1.2); /* bigger than normal */
-    will-change: filter, opacity, transform; /* 👈 помогает с визуальными артефактами */
-    background-color: transparent; /* на всякий случай */
-    image-rendering: auto;
-    backface-visibility: hidden;
-  }
-  #ice-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(200, 240, 255, 0.2);
-    backdrop-filter: blur(3px) brightness(1.2);
-    z-index: 9998;
-    pointer-events: all;
-    display: none;
-    animation: freezeIn 0.4s ease forwards;
-  }
-  
-  @keyframes freezeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  .ghost {
-    position: absolute;
-    width: 80px;
-    height: auto;
-    z-index: 9999;
-    pointer-events: auto;
-    cursor: pointer;
-  }
-  
-  .ghost-zigzag {
-    animation: ghostZigzag 6s ease-in-out forwards;
-  }
-  
-  .ghost-swirl {
-    animation: ghostSwirl 6s linear forwards;
-  }
-  
-  @keyframes ghostZigzag {
-    0% { transform: translate(0, 0); }
-    20% { transform: translate(100px, -50px); }
-    40% { transform: translate(-100px, 50px); }
-    60% { transform: translate(100px, -50px); }
-    80% { transform: translate(-100px, 50px); }
-    100% { transform: translate(0, 0); }
-  }
-  
-  @keyframes ghostSwirl {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(100px, 80px) rotate(90deg); }
-    50% { transform: translate(-100px, -80px) rotate(180deg); }
-    75% { transform: translate(100px, 80px) rotate(270deg); }
-    100% { transform: translate(0, 0) rotate(360deg); }
-  }
-  .final-score {
-    font-size: 1em;
-    font-weight: bold;
-    color: #ffffff; /* ярко-жёлтый */
-    text-shadow: 0 0 1px #fff700, 0 0 2px #ffaa00;
-    margin: 15px 0;
-  }
+#start-btn,
+#game-over button {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5em;
+  text-transform: uppercase;
+  padding: 15px 30px;
+  background-color: #ff4500;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.3s;
+  letter-spacing: 1px;
+  animation: pulse 2s infinite;
+}
+
+#start-btn:hover,
+#game-over button:hover {
+  background-color: #cc3300;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0.7); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 69, 0, 0.8); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255, 69, 0, 0.7); }
+}
+
+/* =================== UI BARS =================== */
+#info-bar {
+  position: fixed;
+  top: 230px;
+  left: 0;
+  width: 90%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  font-size: 1.4em;
+  color: #fff;
+  font-family: 'Creepster', cursive;
+  z-index: 1001;
+}
+
+#score, #timer {
+  margin: 0;
+  padding: 0;
+}
+
+/* =================== ELEMENTS =================== */
+.pumpkin,
+.spider,
+.golden {
+  position: absolute;
+  width: 60px;
+  height: auto;
+  cursor: pointer;
+  z-index: 5;
+  transition: transform 0.2s;
+}
+
+.pumpkin.explode,
+.golden.explode {
+  transform: scale(1.5) rotate(360deg);
+  opacity: 0;
+  transition: all 0.4s ease-out;
+}
+
+.golden {
+  filter: drop-shadow(0 0 12px gold);
+  transform: scale(1.2);
+}
+
+/* =================== SCREENS =================== */
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 10, 10, 0.9);
+  color: white;
+  font-family: 'Creepster', cursive;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  text-align: center;
+}
+
+#start-screen h2 {
+  font-size: 3em;
+  margin-bottom: 30px;
+}
+
+#game-over {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  max-width: 500px;
+  height: 220px;
+  font-size: 2em;
+  color: #fff;
+  font-family: 'Creepster', cursive;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.9);
+  padding: 40px 20px;
+  border-radius: 30px;
+  text-align: center;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+}
+
+/* =================== GHOST =================== */
+.ghost {
+  position: absolute;
+  width: 80px;
+  height: auto;
+  z-index: 6;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+@keyframes zigzag {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(30px, -20px); }
+  40% { transform: translate(-30px, 20px); }
+  60% { transform: translate(30px, -20px); }
+  80% { transform: translate(-30px, 20px); }
+  100% { transform: translate(0, 0); }
+}
+
+@keyframes swirl {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(20px, 30px) rotate(90deg); }
+  50%  { transform: translate(-20px, -30px) rotate(180deg); }
+  75%  { transform: translate(20px, 30px) rotate(270deg); }
+  100% { transform: translate(0, 0) rotate(360deg); }
+}
+
+.ghost-zigzag {
+  animation: zigzag 6s ease-in-out forwards;
+}
+
+.ghost-swirl {
+  animation: swirl 6s linear forwards;
+}
+
+/* =================== ICE OVERLAY =================== */
+#ice-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(200, 240, 255, 0.2);
+  backdrop-filter: blur(3px) brightness(1.2);
+  z-index: 9998;
+  pointer-events: all;
+  display: none;
+  animation: freezeIn 0.4s ease forwards;
+}
+
+@keyframes freezeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
