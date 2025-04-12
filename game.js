@@ -18,6 +18,7 @@ function startGame() {
   let goldenCount = 0;
   let ghostLimit = Math.random() < 0.5 ? 2 : 3;
   let ghostCount = 0;
+
   const timerDisplay = document.getElementById('timer');
 
   const timerInterval = setInterval(() => {
@@ -32,8 +33,8 @@ function startGame() {
     }
   }, 1000);
 
-  // 🎃 Pumpkins
   spawnInterval = setInterval(spawnPumpkin, 1000);
+
   setTimeout(() => {
     clearInterval(spawnInterval);
     spawnInterval = setInterval(() => {
@@ -42,10 +43,8 @@ function startGame() {
     }, 800);
   }, 5000);
 
-  // 🕷 Spiders
   spiderInterval = setInterval(spawnSpider, 3500);
 
-  // 👻 Ghosts
   const ghostInterval = setInterval(() => {
     if (ghostCount < ghostLimit) {
       spawnGhost();
@@ -55,7 +54,6 @@ function startGame() {
     }
   }, 8000);
 
-  // 🟡 Golden pumpkins
   const goldenInterval = setInterval(() => {
     if (goldenCount < goldenLimit) {
       spawnGoldenPumpkin();
@@ -66,7 +64,6 @@ function startGame() {
   }, 10000);
 }
 
-// ⚡ Pre-warm laugh
 window.addEventListener('load', () => {
   const laugh = document.getElementById('hehe-sound');
   laugh.volume = 0;
@@ -97,9 +94,7 @@ function spawnPumpkin() {
   pumpkin.style.left = Math.random() * 80 + '%';
   pumpkin.style.top = Math.random() * 80 + '%';
   document.body.appendChild(pumpkin);
-
   const disappearTimeout = setTimeout(() => pumpkin.remove(), 1000);
-
   pumpkin.addEventListener('click', () => {
     clearTimeout(disappearTimeout);
     pumpkin.classList.add('explode');
@@ -115,9 +110,7 @@ function spawnGoldenPumpkin() {
   golden.style.left = Math.random() * 80 + '%';
   golden.style.top = Math.random() * 80 + '%';
   document.body.appendChild(golden);
-
   const disappearTimeout = setTimeout(() => golden.remove(), 1500);
-
   golden.addEventListener('click', () => {
     clearTimeout(disappearTimeout);
     golden.classList.add('explode');
@@ -138,15 +131,12 @@ function spawnSpider() {
   spider.style.left = (baseLeft + Math.random() * 10 - 5) + '%';
   spider.style.top = (baseTop + Math.random() * 10 - 5) + '%';
   document.body.appendChild(spider);
-
   const disappearTimeout = setTimeout(() => spider.remove(), 1500);
-
   spider.addEventListener('click', () => {
-    const original = document.getElementById('hehe-sound');
-    const laugh = original.cloneNode();
+    clearTimeout(disappearTimeout);
+    const laugh = document.getElementById('hehe-sound').cloneNode();
     laugh.volume = 1;
     laugh.play().catch(() => {});
-    clearTimeout(disappearTimeout);
     score = 0;
     scoreElement.textContent = `Score: ${score}`;
     spider.remove();
@@ -161,46 +151,54 @@ function spawnGhost() {
 
   const screenWidth = window.innerWidth;
   const screenHeight = window.innerHeight;
-  const direction = Math.floor(Math.random() * 4);
-  let startX, startY;
+  const directions = ['top', 'right', 'bottom', 'left'];
+  const entry = directions[Math.floor(Math.random() * directions.length)];
+  let startX = 0, startY = 0, endX = 0, endY = 0;
+  const centerX = screenWidth / 2;
+  const centerY = screenHeight / 2;
 
-  if (direction === 0) {
+  if (entry === 'top') {
     startX = Math.random() * screenWidth;
     startY = -100;
-  } else if (direction === 1) {
-    startX = -100;
-    startY = Math.random() * screenHeight;
-  } else if (direction === 2) {
-    startX = Math.random() * screenWidth;
-    startY = screenHeight + 100;
-  } else {
+    endX = screenWidth - startX;
+    endY = screenHeight + 100;
+  } else if (entry === 'right') {
     startX = screenWidth + 100;
     startY = Math.random() * screenHeight;
+    endX = -100;
+    endY = screenHeight - startY;
+  } else if (entry === 'bottom') {
+    startX = Math.random() * screenWidth;
+    startY = screenHeight + 100;
+    endX = screenWidth - startX;
+    endY = -100;
+  } else {
+    startX = -100;
+    startY = Math.random() * screenHeight;
+    endX = screenWidth + 100;
+    endY = screenHeight - startY;
   }
 
   ghost.style.left = `${startX}px`;
   ghost.style.top = `${startY}px`;
   ghost.style.position = 'absolute';
-  ghost.style.zIndex = 50;
 
-  const movementType = Math.random();
-  if (movementType < 0.33) {
-    ghost.classList.add('ghost-swirl');
-  } else if (movementType < 0.66) {
-    ghost.classList.add('ghost-zigzag');
-  } else {
-    ghost.style.transition = 'transform 6s linear';
-    requestAnimationFrame(() => {
-      const endX = (Math.random() - 0.5) * screenWidth * 1.5;
-      const endY = (Math.random() - 0.5) * screenHeight * 1.5;
-      ghost.style.transform = `translate(${endX}px, ${endY}px)`;
-    });
-  }
+  const animationStyle = Math.random() < 0.5 ? 'ghost-swirl' : 'ghost-zigzag';
+  ghost.classList.add(animationStyle);
+
+  ghost.animate([
+    { transform: `translate(0, 0)`, opacity: 0.4 },
+    { transform: `translate(${centerX - startX}px, ${centerY - startY}px)`, opacity: 1 },
+    { transform: `translate(${endX - startX}px, ${endY - startY}px)`, opacity: 0.2 }
+  ], {
+    duration: 6000,
+    easing: 'ease-in-out',
+    fill: 'forwards'
+  });
 
   document.body.appendChild(ghost);
 
-  const removeTimeout = setTimeout(() => ghost.remove(), 8000);
-
+  const removeTimeout = setTimeout(() => ghost.remove(), 6000);
   ghost.addEventListener('click', () => {
     clearTimeout(removeTimeout);
     ghost.remove();
@@ -208,30 +206,11 @@ function spawnGhost() {
   });
 }
 
-function endGame() {
-  document.querySelectorAll('.pumpkin, .spider').forEach(el => el.remove());
-
-  const gameOver = document.createElement('div');
-  gameOver.id = 'game-over';
-  gameOver.innerHTML = `
-    <p>Game Over!</p>
-    <p style="font-size:0.6em; margin: 10px 0; color:#ffff88;">Your Score: ${score}</p>
-    <button id="play-again">Play Again</button>
-  `;
-  document.body.appendChild(gameOver);
-
-  document.getElementById('play-again').addEventListener('click', () => {
-    window.location.reload();
-  });
-}
-
 function freezeGameFor(ms) {
   clearInterval(spawnInterval);
   clearInterval(spiderInterval);
-
   const overlay = document.getElementById('ice-overlay');
   overlay.style.display = 'block';
-
   setTimeout(() => {
     overlay.style.display = 'none';
     spawnInterval = setInterval(() => {
@@ -240,4 +219,19 @@ function freezeGameFor(ms) {
     }, 800);
     spiderInterval = setInterval(spawnSpider, 3500);
   }, ms);
+}
+
+function endGame() {
+  document.querySelectorAll('.pumpkin, .spider, .ghost').forEach(el => el.remove());
+  const gameOver = document.createElement('div');
+  gameOver.id = 'game-over';
+  gameOver.innerHTML = `
+  <p>Game Over!</p>
+  <p class="final-score">Your Score: <strong>${score}</strong></p>
+  <button id="play-again">Play Again</button>
+`;
+  document.body.appendChild(gameOver);
+  document.getElementById('play-again').addEventListener('click', () => {
+    window.location.reload();
+  });
 }
